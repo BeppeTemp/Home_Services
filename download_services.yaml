@@ -1,7 +1,7 @@
-# Jackett
 ---
-version: "2.1"
+version: "1.0"
 services:
+
   jackett:
     image: lscr.io/linuxserver/jackett
     container_name: Jackett
@@ -17,54 +17,6 @@ services:
       - 9005:9117
     restart: unless-stopped
 
-version: "3"
-
-# Pihole
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
----
-services:
-  pihole:
-    container_name: Pihole
-    image: pihole/pihole:latest
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "9001:80/tcp"
-    environment:
-      TZ: 'Europe/Rome'
-      WEBPASSWORD: ''
-    # Volumes store your data between container upgrades
-    volumes:
-      - '/volume1/docker/pihole/config:/etc/pihole/'
-      - '/volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/'
-    cap_add:
-      - NET_ADMIN
-    restart: unless-stopped
-
-# Plex
----
-version: "2.1"
-services:
-  plex:
-    image: lscr.io/linuxserver/plex
-    container_name: Plex
-    network_mode: host
-    environment:
-      - PUID=1034
-      - PGID=100
-      - VERSION=docker
-      - PLEX_CLAIM=claim-Rdsy1Hs7-6GcDiJZoUUH
-    volumes:
-      - /volume1/docker/plex:/config
-      - /volume1/media/Serie-TV:/tv
-      - /volume1/media/Film:/movies
-    restart: unless-stopped
-
-# Radarr
----
-version: "2.1"
-services:
   radarr:
     image: lscr.io/linuxserver/radarr
     container_name: Radarr
@@ -78,10 +30,6 @@ services:
       - 9004:7878
     restart: unless-stopped
 
-# Sonarr
----
-version: "2.1"
-services:
   sonarr:
     image: lscr.io/linuxserver/sonarr
     container_name: Sonarr
@@ -97,10 +45,6 @@ services:
       - 9003:8989
     restart: unless-stopped
 
-# Transmission
----
-version: "2.1"
-services:
   transmission:
     image: lscr.io/linuxserver/transmission
     container_name: Transmission
