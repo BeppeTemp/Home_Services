@@ -7,8 +7,8 @@ services:
     image: lscr.io/linuxserver/jackett
     container_name: Jackett
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/London
       - AUTO_UPDATE=true #optional
     volumes:
@@ -22,8 +22,8 @@ services:
     image: lscr.io/linuxserver/radarr
     container_name: Radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
     volumes:
       - /volume1/docker/radarr/config:/config
@@ -35,8 +35,8 @@ services:
     image: lscr.io/linuxserver/sonarr
     container_name: Sonarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
     volumes:
       - /volume1/docker/sonarr/config:/config
@@ -50,15 +50,15 @@ services:
     image: lscr.io/linuxserver/transmission
     container_name: Transmission
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
       - USER=BeppeTemp #optional
       - PASS=Cosa@#118StaviF #optional
     volumes:
       - /volume1/docker/transmission/config:/config
-      - /volume1/docker/transmission/downloads:/downloads
-      - /volume1/docker/transmission/watch:/watch
+      - /volume1/media/Downloads:/downloads
+      - /volume1/media/Downloads:/watch
     ports:
       - 9002:9091
       - 51413:51413
