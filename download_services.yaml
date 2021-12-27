@@ -1,6 +1,5 @@
 ---
 version: "2.1"
-
 services:
 
   jackett:
@@ -9,8 +8,8 @@ services:
     environment:
       - PUID=1034
       - PGID=100
-      - TZ=Europe/London
-      - AUTO_UPDATE=true #optional
+      - TZ=Europe/Rome
+      - AUTO_UPDATE=true
     volumes:
       - /volume1/docker/jackett/config:/config
       - /volume1/docker/jackett/downloads:/downloads
@@ -27,6 +26,8 @@ services:
       - TZ=Europe/Rome
     volumes:
       - /volume1/docker/radarr/config:/config
+      - /volume1/media/Film:/movies
+      - /volume1/media/Downloads:/downloads
     ports:
       - 9004:7878
     restart: unless-stopped
@@ -53,8 +54,9 @@ services:
       - PUID=1034
       - PGID=100
       - TZ=Europe/Rome
-      - USER=BeppeTemp #optional
-      - PASS=Cosa@#118StaviF #optional
+      - TRANSMISSION_WEB_HOME=/kettu/
+      - USER=BeppeTemp
+      - PASS=Cosa@#118StaviF
     volumes:
       - /volume1/docker/transmission/config:/config
       - /volume1/media/Downloads:/downloads
