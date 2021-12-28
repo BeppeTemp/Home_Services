@@ -19,3 +19,17 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
+
+  flame:
+    image: pawelmalak/flame:latest
+    container_name: Flame
+    volumes:
+      - /volume1/docker/flame:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 5050:5005
+    environment:
+      - PUID=1026
+      - PGID=101
+      - PASSWORD=Cosa@#118StaviF
+    restart: unless-stopped
