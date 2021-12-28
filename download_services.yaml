@@ -27,7 +27,7 @@ services:
     volumes:
       - /volume1/docker/radarr/config:/config
       - /volume1/media/Film:/movies
-      - /volume1/media/Downloads:/downloads
+      - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
       - 9004:7878
     restart: unless-stopped
