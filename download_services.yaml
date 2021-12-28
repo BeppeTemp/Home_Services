@@ -42,27 +42,7 @@ services:
     volumes:
       - /volume1/docker/sonarr/config:/config
       - /volume1/media/Serie-TV:/tv
-      - /volume1/media/Downloads:/downloads
+      - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
       - 9003:8989
-    restart: unless-stopped
-
-  transmission:
-    image: lscr.io/linuxserver/transmission
-    container_name: Transmission
-    environment:
-      - PUID=1034
-      - PGID=100
-      - TZ=Europe/Rome
-      - TRANSMISSION_WEB_HOME=/kettu/
-      - USER=BeppeTemp
-      - PASS=Cosa@#118StaviF
-    volumes:
-      - /volume1/docker/transmission/config:/config
-      - /volume1/media/Downloads:/downloads
-      - /volume1/media/Downloads:/watch
-    ports:
-      - 9002:9091
-      - 51413:51413
-      - 51413:51413/udp
     restart: unless-stopped
