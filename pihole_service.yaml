@@ -1,0 +1,21 @@
+---
+version: "2.1"
+services:
+
+  pihole:
+    container_name: Pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "9001:80/tcp"
+    environment:
+      TZ: 'Europe/Rome'
+      WEBPASSWORD: ''
+    volumes:
+      - '/volume1/docker/pihole/config:/etc/pihole/'
+      - '/volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/'
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
