@@ -14,8 +14,8 @@ services:
       TZ: 'Europe/Rome'
       WEBPASSWORD: ''
     volumes:
-      - '/volume1/docker/pihole/config:/etc/pihole/'
-      - '/volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/'
+      - '/home/pi/docker/pihole/config:/etc/pihole/'
+      - '/home/pi/docker/pihole/dnsmasq:/etc/dnsmasq.d/'
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
