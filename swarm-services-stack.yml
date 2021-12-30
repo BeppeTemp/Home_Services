@@ -16,6 +16,9 @@ services:
       - 50003:9117
     deploy:
       mode: global
+      placement:
+        constraints:
+          - "node.hostname!=Home-Nas"
 
   radarr:
     image: lscr.io/linuxserver/radarr
@@ -31,6 +34,9 @@ services:
       - 50004:7878
     deploy:
       mode: global
+      placement:
+        constraints:
+          - "node.hostname!=Home-Nas"
 
   sonarr:
     image: lscr.io/linuxserver/sonarr
@@ -46,3 +52,23 @@ services:
       - 50005:8989
     deploy:
       mode: global
+      placement:
+        constraints:
+          - "node.hostname!=Home-Nas"
+
+  flame:
+    image: pawelmalak/flame:latest
+    volumes:
+      - /volume1/docker/flame:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 50002:5005
+    environment:
+      - PUID=1026
+      - PGID=101
+      - PASSWORD=Cosa@#118StaviF
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname==Home-Nas"
