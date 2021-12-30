@@ -14,7 +14,6 @@ services:
       - /volume1/docker/jackett/downloads:/downloads
     ports:
       - 50003:9117
-    restart: unless-stopped
     deploy:
       mode: global
 
@@ -30,7 +29,6 @@ services:
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
       - 50004:7878
-    restart: unless-stopped
     deploy:
       mode: global
 
@@ -46,6 +44,5 @@ services:
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
       - 50005:8989
-    restart: unless-stopped
     deploy:
       mode: global

@@ -13,6 +13,5 @@ services:
       - PUID=1026
       - PGID=101
       - PASSWORD=Cosa@#118StaviF
-    restart: unless-stopped
     deploy:
       mode: global
