@@ -1,17 +1,18 @@
 ---
-version: "2.1"
+version: "3"
 services:
 
   flame:
     image: pawelmalak/flame:latest
-    container_name: Flame
     volumes:
       - /volume1/docker/flame:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 5050:5005
+      - 50002:5005
     environment:
       - PUID=1026
       - PGID=101
       - PASSWORD=Cosa@#118StaviF
     restart: unless-stopped
+    deploy:
+      mode: global

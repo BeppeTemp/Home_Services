@@ -1,10 +1,9 @@
 ---
-version: "2.1"
+version: "3"
 services:
 
   jackett:
     image: lscr.io/linuxserver/jackett
-    container_name: Jackett
     environment:
       - PUID=1034
       - PGID=100
@@ -14,12 +13,13 @@ services:
       - /volume1/docker/jackett/config:/config
       - /volume1/docker/jackett/downloads:/downloads
     ports:
-      - 9004:9117
+      - 50003:9117
     restart: unless-stopped
+    deploy:
+      mode: global
 
   radarr:
     image: lscr.io/linuxserver/radarr
-    container_name: Radarr
     environment:
       - PUID=1034
       - PGID=100
@@ -29,12 +29,13 @@ services:
       - /volume1/media/Film:/movies
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
-      - 9003:7878
+      - 50004:7878
     restart: unless-stopped
+    deploy:
+      mode: global
 
   sonarr:
     image: lscr.io/linuxserver/sonarr
-    container_name: Sonarr
     environment:
       - PUID=1034
       - PGID=100
@@ -44,5 +45,7 @@ services:
       - /volume1/media/Serie-TV:/tv
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
-      - 9002:8989
+      - 50005:8989
     restart: unless-stopped
+    deploy:
+      mode: global
