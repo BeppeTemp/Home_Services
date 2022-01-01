@@ -2,20 +2,18 @@
 version: "3"
 services:
 
-  jackett:
-    image: lscr.io/linuxserver/jackett
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:develop
     environment:
-      - PUID=1034
-      - PGID=100
+      - PUID=1026
+      - PGID=101
       - TZ=Europe/Rome
-      - AUTO_UPDATE=true
     volumes:
-      - /volume1/docker/jackett/config:/config
-      - /volume1/docker/jackett/downloads:/downloads
+      - /volume1/docker/prowlarr:/config
     ports:
-      - 50003:9117
+      - 50003:9696
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - "node.hostname!=Home-Nas"
@@ -33,7 +31,7 @@ services:
     ports:
       - 50004:7878
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - "node.hostname!=Home-Nas"
@@ -51,7 +49,7 @@ services:
     ports:
       - 50005:8989
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - "node.hostname!=Home-Nas"
@@ -72,3 +70,24 @@ services:
       placement:
         constraints:
           - "node.hostname==Home-Nas"
+
+  transmission:
+    image: lscr.io/linuxserver/transmission
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+      - TRANSMISSION_WEB_HOME=/combustion-release/
+    volumes:
+      - /volume1/docker/transmission:/config
+      - /volume1/media/Downloads:/downloads
+      - /volume1/media/Downloads:/watch
+    ports:
+      - 50006:9091
+      - 51413:51413
+      - 51413:51413/udp
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - "node.hostname!=Home-Nas"
