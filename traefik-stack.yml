@@ -1,0 +1,96 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.5
+    ports:
+      - "80:80"
+      - "443:443"
+      # (Optional) Expose Dashboard
+      - "8080:8080"  # Don't do this in production!
+    networks:
+      - traefik-public
+    volumes:
+      # - /volume1/docker/traefik:/etc
+
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+    command:
+      # Definizione configurazioni globali
+      - --global.checkNewVersion
+      - --global.sendAnonymousUsage
+
+      # Definizione configurazione dashboard
+      - --api.dashboard=true
+      - --api.insecure=true
+      
+      # Log di Debug
+      - --log.level=DEBUG
+
+      # Definizione degli entrypoints
+      - --entryPoints.web.address=:80
+      # - --entryPoints.web.http.redirections.entryPoint.to=websecure
+      # - --entryPoints.web.http.redirections.entryPoint.scheme=https
+      - --entryPoints.websecure.address=:443
+
+      # # Definizione del risolutore di certificati
+      # # Di staging
+      # - --certificatesResolvers.staging.acme.email=giuseppe9909@gmail.com
+      # - --certificatesResolvers.staging.acme.storage=/certificates/acme.json
+      # - --certificatesResolvers.staging.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+      # - --certificatesresolvers.staging.acme.tlschallenge=true
+      # - --certificatesResolvers.staging.acme.httpChallenge.entryPoint=web
+      # # Di produzione
+      - --certificatesResolvers.production.acme.email=giuseppe9909@gmail.com
+      - --certificatesResolvers.production.acme.storage=/certificates/acme.json
+      - --certificatesResolvers.production.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.production.acme.tlschallenge=true
+      - --certificatesResolvers.production.acme.httpChallenge.entryPoint=websecure
+
+      # - --certificatesresolvers.le.acme.email=giuseppe9909@gmail.com
+      # - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      # - --certificatesresolvers.le.acme.tlschallenge=true
+
+      # Definizione dei providers
+      - --providers.docker=true
+      - --providers.docker.swarmmode=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik-public
+      # - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+  
+  flame:
+    image: pawelmalak/flame:multiarch2.2.0
+    environment:
+      - PASSWORD=somesecretString
+    networks:
+      - traefik-public
+    volumes:
+      - /volume1/docker/flame:/app/data
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+
+        - traefik.http.routers.flame.entrypoints=web
+        - traefik.http.routers.flame.rule=Host(`beppetemp.com`)
+
+        - traefik.http.routers.flame-https.tls=true
+        - traefik.http.routers.flame-https.entrypoints=websecure
+        - traefik.http.routers.flame-https.tls.certresolver=production
+        - traefik.http.routers.flame-https.rule=Host(`beppetemp.com`)
+
+        - "traefik.http.services.flame.loadbalancer.server.port=5005"
+
+# Volume per il salvataggio dei certificati. Si trova solo sul nodo master
+volumes:
+  traefik-public-certificates:
+
+networks:
+  traefik-public:
+    external: true
