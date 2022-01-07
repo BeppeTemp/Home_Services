@@ -20,16 +20,13 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
-
         - traefik.http.routers.prowlarr.entrypoints=web
-        - traefik.http.routers.prowlarr.rule=Host(`beppetemp.com`)&&Path(`/prowlarr`)
-
+        - traefik.http.routers.prowlarr.rule=Host(`prowlarr.beppetemp.com`)
         - traefik.http.routers.prowlarr-https.tls=true
         - traefik.http.routers.prowlarr-https.entrypoints=websecure
         - traefik.http.routers.prowlarr-https.tls.certresolver=production
-        - traefik.http.routers.prowlarr-https.rule=Host(`beppetemp.com`)&&Path(`/prowlarr`)
-
-        - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+        - traefik.http.routers.prowlarr-https.rule=Host(`prowlarr.beppetemp.com`)
+        - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 
   radarr:
     image: lscr.io/linuxserver/radarr
@@ -51,16 +48,13 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
-
         - traefik.http.routers.radarr.entrypoints=web
-        - traefik.http.routers.radarr.rule=Host(`beppetemp.com`)&&Path(`/radarr`)
-
+        - traefik.http.routers.radarr.rule=Host(`radarr.beppetemp.com`)
         - traefik.http.routers.radarr-https.tls=true
         - traefik.http.routers.radarr-https.entrypoints=websecure
         - traefik.http.routers.radarr-https.tls.certresolver=production
-        - traefik.http.routers.radarr-https.rule=Host(`beppetemp.com`)&&Path(`/radarr`)
-
-        - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+        - traefik.http.routers.radarr-https.rule=Host(`radarr.beppetemp.com`)
+        - traefik.http.services.radarr.loadbalancer.server.port=7878
 
   sonarr:
     image: lscr.io/linuxserver/sonarr
@@ -80,16 +74,13 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
-
         - traefik.http.routers.sonarr.entrypoints=web
-        - traefik.http.routers.sonarr.rule=Host(`beppetemp.com`)
-
+        - traefik.http.routers.sonarr.rule=Host(`sonarr.beppetemp.com`)
         - traefik.http.routers.sonarr-https.tls=true
         - traefik.http.routers.sonarr-https.entrypoints=websecure
         - traefik.http.routers.sonarr-https.tls.certresolver=production
-        - traefik.http.routers.sonarr-https.rule=Host(`beppetemp.com`)
-
-        - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+        - traefik.http.routers.sonarr-https.rule=Host(`sonarr.beppetemp.com`)
+        - traefik.http.services.sonarr.loadbalancer.server.port=8989
 
   transmission:
     image: lscr.io/linuxserver/transmission
@@ -115,16 +106,13 @@ services:
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
-
         - traefik.http.routers.transmission.entrypoints=web
-        - traefik.http.routers.transmission.rule=Host(`beppetemp.com`)&&Path(`/transmission`)
-
+        - traefik.http.routers.transmission.rule=Host(`transmission.beppetemp.com`)
         - traefik.http.routers.transmission-https.tls=true
         - traefik.http.routers.transmission-https.entrypoints=websecure
         - traefik.http.routers.transmission-https.tls.certresolver=production
-        - traefik.http.routers.transmission-https.rule=Host(`beppetemp.com`)&&Path(`/transmission`)
-
-        - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+        - traefik.http.routers.transmission-https.rule=Host(`transmission.beppetemp.com`)
+        - traefik.http.services.transmission.loadbalancer.server.port=9091
 
 networks:
   traefik-public:

@@ -1,0 +1,82 @@
+version: '3'
+
+services: 
+  flame:
+    image: pawelmalak/flame:multiarch2.2.0
+    hostname: '{{.Node.Hostname}}'
+    environment:
+      - PASSWORD=metin2server
+    networks:
+      - traefik-public
+    volumes:
+      - /volume1/docker/flame:/app/data
+    deploy:
+      replicas: 1
+      labels:
+        # Attivazione di Traefik
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+
+        # Esposizioe su HTTP
+        - traefik.http.routers.flame.entrypoints=web
+        - traefik.http.routers.flame.rule=Host(`dashboard.beppetemp.com`)
+
+        # Middleware di redirezione da HTTP a HTTPS
+        - traefik.http.routers.flame.middlewares=https-redirect
+
+        # Esposizioe su HTTPS
+        - traefik.http.routers.flame-https.tls=true
+        - traefik.http.routers.flame-https.entrypoints=websecure
+        - traefik.http.routers.flame-https.tls.certresolver=production
+        - traefik.http.routers.flame-https.rule=Host(`dashboard.beppetemp.com`)
+
+        # loadbalancer
+        - traefik.http.services.flame.loadbalancer.server.port=5005
+
+  pihole:
+    image: pihole/pihole:latest
+    hostname: '{{.Node.Hostname}}'
+    environment:
+      PUID: 1034
+      PGID: 100
+      TZ: 'Europe/Rome'
+      WEBPASSWORD: 'Cosa@#118StaviF'
+      FTL_CMD: 'debug'
+      DNSMASQ_LISTENING: 'all'
+      WEB_PORT: 8083
+    networks:
+      - docker-swarm-net
+      - traefik-public
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8083:8083/tcp"
+    volumes:
+       - /volume1/docker/pihole/config:/etc/pihole/
+       - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        # Attivazione di Traefik
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+
+        # Esposizioe su HTTP
+        - traefik.http.routers.pihole.entrypoints=web
+        - traefik.http.routers.pihole.rule=Host(`pihole.home`)
+
+        # loadbalancer
+        - traefik.http.services.pihole.loadbalancer.server.port=8083
+
+networks:
+  traefik-public:
+    external: true
+  docker-swarm-net:
+    external: true
