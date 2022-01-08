@@ -1,0 +1,38 @@
+version: '3'
+
+services: 
+  flame:
+    image: pawelmalak/flame:multiarch2.2.0
+    hostname: '{{.Node.Hostname}}'
+    environment:
+      - PASSWORD=metin2server
+    networks:
+      - traefik-public
+    volumes:
+      - /volume1/docker/flame:/app/data
+    deploy:
+      replicas: 2
+      labels:
+        # Attivazione di Traefik
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+
+        # Esposizioe su HTTP
+        - traefik.http.routers.flame.entrypoints=web
+        - traefik.http.routers.flame.rule=Host(`dashboard.beppetemp.com`)
+
+        # Middleware di redirezione da HTTP a HTTPS
+        - traefik.http.routers.flame.middlewares=https-redirect
+
+        # Esposizioe su HTTPS
+        - traefik.http.routers.flame-https.tls=true
+        - traefik.http.routers.flame-https.entrypoints=websecure
+        - traefik.http.routers.flame-https.tls.certresolver=production
+        - traefik.http.routers.flame-https.rule=Host(`dashboard.beppetemp.com`)
+
+        # loadbalancer
+        - traefik.http.services.flame.loadbalancer.server.port=5005
+
+networks:
+  traefik-public:
+    external: true

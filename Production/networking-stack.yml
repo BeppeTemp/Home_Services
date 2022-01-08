@@ -1,37 +1,70 @@
 version: '3'
 
-services: 
-  flame:
-    image: pawelmalak/flame:multiarch2.2.0
-    hostname: '{{.Node.Hostname}}'
-    environment:
-      - PASSWORD=metin2server
+services:
+  traefik:
+    image: traefik:v2.5
+    ports:
+      - "80:80"
+      - "443:443"
+      - "53:53/udp"
+      - "53:53/tcp"
+      # Attivazione della dashboard
+      - "8080:8080"
     networks:
       - traefik-public
     volumes:
-      - /volume1/docker/flame:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+    command:
+      # Definizione configurazioni globali
+      - --global.checkNewVersion
+      - --global.sendAnonymousUsage
+
+      # Definizione configurazione dashboard
+      - --api.dashboard=true
+      - --api.insecure=true
+      
+      # Log di Debug
+      # - --log.level=DEBUG
+
+      # Definizione degli entrypoints
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+      - --entrypoints.pihole_dns.address=:53
+      - --entrypoints.pihole_dns_udp.address=:53/udp
+
+      # Definizione del risolutore di certificati
+      - --certificatesResolvers.production.acme.email=giuseppe9909@gmail.com
+      - --certificatesResolvers.production.acme.storage=/certificates/acme.json
+      - --certificatesResolvers.production.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.production.acme.tlschallenge=true
+      - --certificatesResolvers.production.acme.httpChallenge.entryPoint=websecure
+
+      # Definizione dei providers
+      - --providers.docker=true
+      - --providers.docker.swarmmode=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik-public
     deploy:
+      mode: replicated
       replicas: 1
+      placement:
+        constraints: [node.role == manager]
       labels:
         # Attivazione di Traefik
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
 
         # Esposizioe su HTTP
-        - traefik.http.routers.flame.entrypoints=web
-        - traefik.http.routers.flame.rule=Host(`dashboard.beppetemp.com`)
-
-        # Middleware di redirezione da HTTP a HTTPS
-        - traefik.http.routers.flame.middlewares=https-redirect
-
-        # Esposizioe su HTTPS
-        - traefik.http.routers.flame-https.tls=true
-        - traefik.http.routers.flame-https.entrypoints=websecure
-        - traefik.http.routers.flame-https.tls.certresolver=production
-        - traefik.http.routers.flame-https.rule=Host(`dashboard.beppetemp.com`)
+        - traefik.http.routers.traefik.entrypoints=web
+        - traefik.http.routers.traefik.rule=Host(`traefik.home`)
 
         # loadbalancer
-        - traefik.http.services.flame.loadbalancer.server.port=5005
+        - traefik.http.services.traefik.loadbalancer.server.port=8080
+
+        # Definizione del Middleware di redirezione
+        - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
   pihole:
     image: pihole/pihole:latest
@@ -44,14 +77,11 @@ services:
       FTL_CMD: 'debug'
       DNSMASQ_LISTENING: 'all'
       WEB_PORT: 8083
+      VIRTUAL_HOST: "pihole.home"
+      DNS_FQDN_REQUIRED: 'true'
+      DNS_BOGUS_PRIV: 'true'
     networks:
-      - docker-swarm-net
       - traefik-public
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "8083:8083/tcp"
     volumes:
        - /volume1/docker/pihole/config:/etc/pihole/
        - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
@@ -72,11 +102,41 @@ services:
         - traefik.http.routers.pihole.entrypoints=web
         - traefik.http.routers.pihole.rule=Host(`pihole.home`)
 
+        # Esposizioe porte per per il DNS
+        - traefik.tcp.routers.pihole_dns.rule=HostSNI(`*`)
+        # Protocollo TCP
+        - traefik.tcp.routers.pihole_dns.entrypoints=pihole_dns
+        - traefik.tcp.routers.pihole_dns.service=pihole
+        - traefik.tcp.services.pihole.loadbalancer.server.port=53
+        # Protocollo UDP
+        - traefik.udp.routers.pihole_dns_udp.entrypoints=pihole_dns_udp
+        - traefik.udp.routers.pihole_dns_udp.service=pihole
+        - traefik.udp.services.pihole.loadbalancer.server.port=53
+
         # loadbalancer
         - traefik.http.services.pihole.loadbalancer.server.port=8083
 
+  # whoami:
+  #   image: traefik/whoami
+  #   networks:
+  #     - traefik-public
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.docker.network=traefik-public
+  #       - traefik.http.routers.whoami.entrypoints=web
+  #       - traefik.http.routers.whoami.rule=Host(`portainer.home`)
+  #       - traefik.http.routers.whoami-https.tls=true
+  #       - traefik.http.routers.whoami-https.entrypoints=websecure
+  #       - traefik.http.routers.whoami-https.tls.certresolver=production
+  #       - traefik.http.routers.whoami-https.rule=Host(`portainer.home`)
+  #       - traefik.http.services.whoami.loadbalancer.server.port=80
+  
 networks:
   traefik-public:
     external: true
-  docker-swarm-net:
-    external: true
+
+volumes:
+  traefik-public-certificates:

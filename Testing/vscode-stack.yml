@@ -1,0 +1,51 @@
+---
+version: "3"
+
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server
+    ports:
+      - 8443:8443
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Rome
+      # - PASSWORD=password #optional
+      # - HASHED_PASSWORD= #optional
+      # - SUDO_PASSWORD=password #optional
+      # - SUDO_PASSWORD_HASH= #optional
+      # - PROXY_DOMAIN=code-server.my.domain #optional
+      # - DEFAULT_WORKSPACE=/config/workspace #optional
+    networks:
+      - traefik-public
+    volumes:
+      - /volume1/docker/vscode:/config
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        # Attivazione di Traefik
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+
+        # Esposizioe su HTTP
+        - traefik.http.routers.code-server.entrypoints=web
+        - traefik.http.routers.code-server.rule=Host(`vscode.beppetemp.com`)
+
+        # Middleware di redirezione da HTTP a HTTPS
+        - traefik.http.routers.code-server.middlewares=https-redirect
+
+        # Esposizioe su HTTPS
+        - traefik.http.routers.code-server-https.tls=true
+        - traefik.http.routers.code-server-https.entrypoints=websecure
+        - traefik.http.routers.code-server-https.tls.certresolver=production
+        - traefik.http.routers.code-server-https.rule=Host(`vscode.beppetemp.com`)
+
+        # loadbalancer
+        - traefik.http.services.code-server.loadbalancer.server.port=8443
+
+networks:
+  traefik-public:
+    external: true
