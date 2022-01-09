@@ -1,17 +1,18 @@
 ---
 version: "3"
 services:
-
   prowlarr:
     image: ghcr.io/linuxserver/prowlarr:develop
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
     networks:
       - traefik-public
     volumes:
       - /volume1/docker/prowlarr:/config
+    ports:
+      - 9696:9696
     deploy:
       replicas: 1
       placement:
@@ -32,8 +33,8 @@ services:
   radarr:
     image: lscr.io/linuxserver/radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
     networks:
       - traefik-public  
@@ -41,6 +42,8 @@ services:
       - /volume1/docker/radarr/config:/config
       - /volume1/media/Film:/movies
       - /volume1/media/Downloads:/volume1/media/Downloads
+    ports:
+      - 7878:7878
     deploy:
       replicas: 1
       placement:
@@ -61,8 +64,8 @@ services:
   sonarr:
     image: lscr.io/linuxserver/sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
     networks:
       - traefik-public 
@@ -70,6 +73,8 @@ services:
       - /volume1/docker/sonarr/config:/config
       - /volume1/media/Serie-TV:/tv
       - /volume1/media/Downloads:/volume1/media/Downloads
+    ports:
+      - 8989:8989
     deploy:
       replicas: 1
       placement:
@@ -87,22 +92,22 @@ services:
         # loadbalancer
         - traefik.http.services.sonarr.loadbalancer.server.port=8989
 
-  transmission:
-    image: lscr.io/linuxserver/transmission
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1034
+      - PGID=100
       - TZ=Europe/Rome
-      - TRANSMISSION_WEB_HOME=/combustion-release/
+      - WEBUI_PORT=9090
     networks:
-      - traefik-public
-    ports:
-      - 51413:51413
-      - 51413:51413/udp
+      - traefik-public 
     volumes:
-      - /volume1/docker/transmission:/config
+      - /volume1/docker/qbittorrent:/config
       - /volume1/media/Downloads:/downloads
-      - /volume1/media/Downloads:/watch
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 9090:9090
     deploy:
       replicas: 1
       placement:
@@ -114,11 +119,11 @@ services:
         - traefik.docker.network=traefik-public
 
         # Esposizioe su HTTP
-        - traefik.http.routers.transmission.entrypoints=web
-        - traefik.http.routers.transmission.rule=Host(`transmission.home`)
+        - traefik.http.routers.qbittorrent.entrypoints=web
+        - traefik.http.routers.qbittorrent.rule=Host(`qbittorent.home`)
 
         # loadbalancer
-        - traefik.http.services.transmission.loadbalancer.server.port=9091
+        - traefik.http.services.qbittorrent.loadbalancer.server.port=9090
 
 networks:
   traefik-public:
