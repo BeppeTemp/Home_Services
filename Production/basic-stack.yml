@@ -11,7 +11,7 @@ services:
     volumes:
       - /volume1/docker/flame:/app/data
     deploy:
-      replicas: 2
+      replicas: 1
       labels:
         # Attivazione di Traefik
         - traefik.enable=true

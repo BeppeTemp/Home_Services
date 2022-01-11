@@ -18,8 +18,8 @@ services:
     command: -H tcp://tasks.agent:9001 --tlsskipverify
     volumes:
       - portainer_data:/data
-    # ports:
-    #    - 9000:9000
+    ports:
+       - 9000:9000
     networks:
       - agent_network
       - traefik-public
@@ -28,25 +28,6 @@ services:
       replicas: 1
       placement:
         constraints: [node.role == manager]
-      labels:
-        # Attivazione di Traefik
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-
-        # Esposizioe su HTTP
-        - traefik.http.routers.portainer.entrypoints=web
-        - traefik.http.routers.portainer.rule=Host(`portainer.home`)
-
-        # Middleware di redirezione da HTTP a HTTPS
-        - traefik.http.routers.portainer.middlewares=https-redirect
-
-        # Esposizioe su HTTPS
-        - traefik.http.routers.portainer-https.tls=true
-        - traefik.http.routers.portainer-https.entrypoints=websecure
-        - traefik.http.routers.portainer-https.rule=Host(`portainer.home`)
-
-        # loadbalancer
-        - traefik.http.services.portainer.loadbalancer.server.port=9000
 
 networks:
   agent_network:

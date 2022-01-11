@@ -1,42 +1,31 @@
 version: "3.7"
  
 services:
-
-  nextcloud:
-    image: nextcloud:latest
-    depends_on:
-      - maindb
-    secrets:
-      - mysql_root_password
+  syncthing:
+    image: lscr.io/linuxserver/syncthing
+    hostname: syncthing
     environment:
-      - MYSQL_HOST=maindb:3306
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
-    ports:
-      - 9000:80
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Rome
     volumes:
-      - nextcloud:/var/www/html:cached
-      - nextapps:/var/www/html/custom_apps:cached
-      - nextdata:/var/www/html/data:cached
-      - nextconfig:/var/www/html/config:cached
-    networks:
-      - traefik-public
+      - config:/config
+      - data1:/data1
+      - data2:/data2
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
     deploy:
       replicas: 1
-
-secrets:
-  mysql_root_password:
-    external: true 
+      placement:
+        constraints:
+          - "node.hostname==Home-Nas"
 volumes:
-  nextcloud:
+  config:
     driver: "local"
-  nextapps:
+  data1:
     driver: "local"
-  nextdata:
+  data2:
     driver: "local"
-  nextconfig:
-    driver: "local"
-networks:
-  traefik-public:
-    external: true
