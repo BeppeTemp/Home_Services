@@ -70,8 +70,8 @@ services:
     image: pihole/pihole:latest
     hostname: '{{.Node.Hostname}}'
     environment:
-      PUID: 1034
-      PGID: 100
+      PUID: 1000
+      PGID: 1000
       TZ: 'Europe/Rome'
       WEBPASSWORD: 'Cosa@#118StaviF'
       FTL_CMD: 'debug'
@@ -80,6 +80,8 @@ services:
       VIRTUAL_HOST: "pihole.home"
       DNS_FQDN_REQUIRED: 'true'
       DNS_BOGUS_PRIV: 'true'
+    ports:
+      - "8083:8083"
     networks:
       - traefik-public
     volumes:
@@ -97,10 +99,6 @@ services:
         # Attivazione di Traefik
         - traefik.enable=true
         - traefik.docker.network=traefik-public
-
-        # Esposizioe su HTTP
-        - traefik.http.routers.pihole.entrypoints=web
-        - traefik.http.routers.pihole.rule=Host(`pihole.home`)
 
         # Esposizioe porte per per il DNS
         - traefik.tcp.routers.pihole_dns.rule=HostSNI(`*`)
