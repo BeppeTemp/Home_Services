@@ -3,7 +3,7 @@ version: "2.1"
 services:
   sonarr:
     image: lscr.io/linuxserver/sonarr
-    container_name: sonarr
+    container_name: Sonarr
     environment:
       - PUID=1026
       - PGID=101
