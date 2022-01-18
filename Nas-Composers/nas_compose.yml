@@ -1,0 +1,78 @@
+---
+version: "2.1"
+
+services:
+  plex:
+    image: lscr.io/linuxserver/plex
+    container_name: Plex
+    network_mode: host
+    environment:
+      - PUID=1026
+      - PGID=101
+      - VERSION=docker
+      - PLEX_CLAIM=claim-Rdsy1Hs7-6GcDiJZoUUH
+    volumes:
+      - /volume1/docker/plex:/config
+      - /volume1/media/Serie-TV:/tv
+      - /volume1/media/Film:/movies
+    restart: unless-stopped
+    devices:
+      - "/dev/dri:/dev/dri"
+
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:develop
+    container_name: Prowlarr
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+    volumes:
+      - /volume1/docker/prowlarr:/config
+    ports:
+      - 10001:9696
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: Radarr
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+    volumes:
+      - /volume1/docker/radarr/config:/config
+      - /volume1/media/Film:/movies
+      - /volume1/media/Downloads:/volume1/media/Downloads
+    ports:
+      - 10002:7878
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: Sonarr
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+    volumes:
+      - /volume1/docker/sonarr/config:/config
+      - /volume1/media/Serie-TV:/tv
+      - /volume1/media/Downloads:/volume1/media/Downloads
+    ports:
+      - 10003:8989
+    restart: unless-stopped
+  
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent
+    container_name: Qbittorrent
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+      - WEBUI_PORT=9090
+    volumes:
+      - /volume1/docker/qbittorrent:/config
+      - /volume1/media/Downloads:/downloads
+    ports:
+      - 10004:9090
+    restart: unless-stopped

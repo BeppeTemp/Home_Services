@@ -66,53 +66,53 @@ services:
         - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
         - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-  pihole:
-    image: pihole/pihole:latest
-    hostname: '{{.Node.Hostname}}'
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: 'Europe/Rome'
-      WEBPASSWORD: 'Cosa@#118StaviF'
-      FTL_CMD: 'debug'
-      DNSMASQ_LISTENING: 'all'
-      WEB_PORT: 8083
-      VIRTUAL_HOST: "pihole.home"
-      DNS_FQDN_REQUIRED: 'true'
-      DNS_BOGUS_PRIV: 'true'
-    ports:
-      - "8083:8083"
-    networks:
-      - traefik-public
-    volumes:
-       - /volume1/docker/pihole/config:/etc/pihole/
-       - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
-    dns:
-      - 127.0.0.1
-      - 8.8.8.8
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.role == manager]
-      labels:
-        # Attivazione di Traefik
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
+  # pihole:
+  #   image: pihole/pihole:latest
+  #   hostname: '{{.Node.Hostname}}'
+  #   environment:
+  #     PUID: 1000
+  #     PGID: 1000
+  #     TZ: 'Europe/Rome'
+  #     WEBPASSWORD: 'Cosa@#118StaviF'
+  #     FTL_CMD: 'debug'
+  #     DNSMASQ_LISTENING: 'all'
+  #     WEB_PORT: 8083
+  #     VIRTUAL_HOST: "pihole.home"
+  #     DNS_FQDN_REQUIRED: 'true'
+  #     DNS_BOGUS_PRIV: 'true'
+  #   ports:
+  #     - "8083:8083"
+  #   networks:
+  #     - traefik-public
+  #   volumes:
+  #      - /volume1/docker/pihole/config:/etc/pihole/
+  #      - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
+  #   dns:
+  #     - 127.0.0.1
+  #     - 8.8.8.8
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.role == manager]
+  #     labels:
+  #       # Attivazione di Traefik
+  #       - traefik.enable=true
+  #       - traefik.docker.network=traefik-public
 
-        # Esposizioe porte per per il DNS
-        - traefik.tcp.routers.pihole_dns.rule=HostSNI(`*`)
-        # Protocollo TCP
-        - traefik.tcp.routers.pihole_dns.entrypoints=pihole_dns
-        - traefik.tcp.routers.pihole_dns.service=pihole
-        - traefik.tcp.services.pihole.loadbalancer.server.port=53
-        # Protocollo UDP
-        - traefik.udp.routers.pihole_dns_udp.entrypoints=pihole_dns_udp
-        - traefik.udp.routers.pihole_dns_udp.service=pihole
-        - traefik.udp.services.pihole.loadbalancer.server.port=53
+  #       # Esposizioe porte per per il DNS
+  #       - traefik.tcp.routers.pihole_dns.rule=HostSNI(`*`)
+  #       # Protocollo TCP
+  #       - traefik.tcp.routers.pihole_dns.entrypoints=pihole_dns
+  #       - traefik.tcp.routers.pihole_dns.service=pihole
+  #       - traefik.tcp.services.pihole.loadbalancer.server.port=53
+  #       # Protocollo UDP
+  #       - traefik.udp.routers.pihole_dns_udp.entrypoints=pihole_dns_udp
+  #       - traefik.udp.routers.pihole_dns_udp.service=pihole
+  #       - traefik.udp.services.pihole.loadbalancer.server.port=53
 
-        # loadbalancer
-        - traefik.http.services.pihole.loadbalancer.server.port=8083
+  #       # loadbalancer
+  #       - traefik.http.services.pihole.loadbalancer.server.port=8083
 
   # whoami:
   #   image: traefik/whoami
