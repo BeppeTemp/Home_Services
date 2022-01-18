@@ -85,8 +85,6 @@ services:
       - PGID=101
       - TZ=Europe/Rome
       - PASSWORD=metin2server
-    networks:
-      - traefik-public
     volumes:
       - /volume1/docker/flame:/app/data
     ports:
