@@ -29,7 +29,7 @@ services:
     volumes:
       - /volume1/docker/prowlarr:/config
     ports:
-      - 10001:9696
+      - 9696:9696
     restart: unless-stopped
 
   radarr:
@@ -44,7 +44,7 @@ services:
       - /volume1/media/Film:/movies
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
-      - 10002:7878
+      - 7878:7878
     restart: unless-stopped
 
   sonarr:
@@ -59,7 +59,7 @@ services:
       - /volume1/media/Serie-TV:/tv
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
-      - 10003:8989
+      - 8989:8989
     restart: unless-stopped
   
   qbittorrent:
@@ -74,5 +74,5 @@ services:
       - /volume1/docker/qbittorrent:/config
       - /volume1/media/Downloads:/downloads
     ports:
-      - 10004:9090
+      - 9090:9090
     restart: unless-stopped
