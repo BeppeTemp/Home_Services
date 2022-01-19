@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
 
   flame:
-    image: pawelmalak/flame:latest
+    image: pawelmalak/flame:multiarch2.2.1
     container_name: Flame
     ports:
       - 5005:5005
