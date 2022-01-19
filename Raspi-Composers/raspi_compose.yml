@@ -107,3 +107,6 @@ services:
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
     restart: unless-stopped
+
+volumes:
+  traefik-public-certificates:
