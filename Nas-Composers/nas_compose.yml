@@ -76,17 +76,3 @@ services:
     ports:
       - 9090:9090
     restart: unless-stopped
-
-  flame:
-    image: pawelmalak/flame:latest
-    container_name: Flame
-    environment:
-      - PUID=1026
-      - PGID=101
-      - TZ=Europe/Rome
-      - PASSWORD=metin2server
-    volumes:
-      - /volume1/docker/flame:/app/data
-    ports:
-      - 5005:5005
-    restart: unless-stopped
