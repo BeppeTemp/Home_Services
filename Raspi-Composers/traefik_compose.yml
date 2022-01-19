@@ -1,56 +1,6 @@
 version: "3"
 
 services:
-  pihole:
-    image: pihole/pihole:latest
-    container_name: pihole
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "8083:8083/tcp"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - WEB_PORT=8083
-      - TZ=Europe/Rome
-      - WEBPASSWORD=Cosa@#118StaviF
-    volumes:
-       - /volume1/docker/pihole/config:/etc/pihole/
-       - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
-    cap_add:
-      - NET_ADMIN
-    restart: unless-stopped
-
-  flame:
-    image: pawelmalak/flame:multiarch2.2.1
-    container_name: Flame
-    ports:
-      - 5005:5005
-    environment:
-      - PUID=1026
-      - PGID=101
-      - TZ=Europe/Rome
-      - PASSWORD=metin2server
-    volumes:
-      - /volume1/docker/flame:/app/data
-    labels:
-      # Attivazione di Traefik
-      - traefik.enable=true
-
-      # Esposizioe su HTTP
-      - traefik.http.routers.flame.entrypoints=web
-      - traefik.http.routers.flame.rule=Host(`dashboard.beppetemp.com`)
-
-      # Middleware di redirezione da HTTP a HTTPS
-      - traefik.http.routers.flame.middlewares=https-redirect
-
-      # Esposizioe su HTTPS
-      - traefik.http.routers.flame-https.tls=true
-      - traefik.http.routers.flame-https.entrypoints=websecure
-      - traefik.http.routers.flame-https.tls.certresolver=production
-      - traefik.http.routers.flame-https.rule=Host(`dashboard.beppetemp.com`)
-    restart: unless-stopped
 
   traefik:
     image: traefik:v2.5
