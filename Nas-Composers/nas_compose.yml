@@ -80,12 +80,11 @@ services:
   homeassistant:
     image: lscr.io/linuxserver/homeassistant
     container_name: Homeassistant
+    network_mode: host
     environment:
       - PUID=1026
       - PGID=101
       - TZ=Europe/Rome
     volumes:
       - /volume1/docker/homeassistant:/config
-    ports:
-      - 8123:8123
     restart: unless-stopped
