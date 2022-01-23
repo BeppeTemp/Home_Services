@@ -18,6 +18,9 @@ services:
     volumes:
        - /volume1/docker/pihole/config:/etc/pihole/
        - /volume1/docker/pihole/dnsmasq:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
     cap_add:
       - NET_ADMIN
     restart: unless-stopped

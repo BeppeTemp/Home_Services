@@ -8,8 +8,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "53:53/udp"
-      - "53:53/tcp"
       # Attivazione della dashboard
       - "8080:8080"
     volumes:
@@ -30,8 +28,6 @@ services:
       # Definizione degli entrypoints
       - --entryPoints.web.address=:80
       - --entryPoints.websecure.address=:443
-      - --entrypoints.pihole_dns.address=:53
-      - --entrypoints.pihole_dns_udp.address=:53/udp
 
       # Definizione del risolutore di certificati
       - --certificatesResolvers.production.acme.email=giuseppe9909@gmail.com
@@ -42,9 +38,7 @@ services:
 
       # Definizione dei providers
       - --providers.docker=true
-      - --providers.docker.swarmmode=true
       - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=traefik-public
     labels:
       # Attivazione di Traefik
       - "traefik.enable=true"
