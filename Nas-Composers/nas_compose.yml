@@ -79,7 +79,7 @@ services:
 
   homeassistant:
     image: lscr.io/linuxserver/homeassistant
-    container_name: homeassistant
+    container_name: Homeassistant
     environment:
       - PUID=1026
       - PGID=101
