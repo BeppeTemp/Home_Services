@@ -4,11 +4,7 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "8083:8083/tcp"
+    network_mode: host
     environment:
       - PUID=1000
       - PGID=1000
