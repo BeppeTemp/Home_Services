@@ -78,15 +78,3 @@ services:
     ports:
       - 9090:9090
     restart: unless-stopped
-
-  homeassistant:
-    image: lscr.io/linuxserver/homeassistant
-    container_name: Homeassistant
-    network_mode: host
-    environment:
-      - PUID=1026
-      - PGID=101
-      - TZ=Europe/Rome
-    volumes:
-      - /volume1/docker/homeassistant:/config
-    restart: unless-stopped
