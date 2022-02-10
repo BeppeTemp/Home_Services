@@ -5,11 +5,7 @@ services:
   traefik:
     image: traefik:v2.5
     container_name: Traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      # Attivazione della dashboard
-      - "8080:8080"
+    network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-public-certificates:/certificates
