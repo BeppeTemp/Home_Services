@@ -46,6 +46,9 @@ services:
       # Definizione del Middleware di redirezione
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+
+      # Definizione del Middleware di redirezione
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
     restart: unless-stopped
 
 volumes:

@@ -29,4 +29,9 @@ services:
       - traefik.http.routers.flame-https.entrypoints=websecure
       - traefik.http.routers.flame-https.tls.certresolver=production
       - traefik.http.routers.flame-https.rule=Host(`dashboard.beppetemp.com`)
+
+      # Definizione del Middleware di redirezione
+      - "traefik.http.services.flame.loadbalancer.server.port=5005"
+
+      
     restart: unless-stopped
