@@ -91,5 +91,5 @@ services:
     volumes:
       - dbdata:/data/db
 
-  volumes:
+volumes:
     dbdata:
