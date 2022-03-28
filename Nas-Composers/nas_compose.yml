@@ -80,14 +80,16 @@ services:
 
   shopping_list:
     image: nanawel/our-shopping-list:latest
-    restart: always
+    container_name: Shopping-List
     ports:
       - '8000:8080'
     depends_on:
       - mongodb
+    restart: unless-stopped
 
   mongodb:
     image: mongo:4
+    container_name: Mongo_DB
     volumes:
       - dbdata:/data/db
 
