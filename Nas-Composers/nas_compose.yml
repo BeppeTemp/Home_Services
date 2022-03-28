@@ -77,3 +77,19 @@ services:
     ports:
       - 9090:9090
     restart: unless-stopped
+
+  shopping_list:
+    image: nanawel/our-shopping-list:latest
+    restart: always
+    ports:
+      - '8000:8080'
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:4
+    volumes:
+      - dbdata:/data/db
+
+  volumes:
+    dbdata:

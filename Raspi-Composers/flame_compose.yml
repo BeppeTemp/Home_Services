@@ -32,6 +32,4 @@ services:
 
       # Definizione del Middleware di redirezione
       - "traefik.http.services.flame.loadbalancer.server.port=5005"
-
-      
     restart: unless-stopped
