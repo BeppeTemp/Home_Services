@@ -12,7 +12,7 @@ services:
       - VERSION=docker
       - PLEX_CLAIM=claim-Rdsy1Hs7-6GcDiJZoUUH
     volumes:
-      - /volume1/docker/plex:/config
+      - /volume1/docker/container-config/plex:/config
       - /volume1/media/Serie-TV:/tv
       - /volume1/media/Film:/movies
       - /volume1/photo:/photo
@@ -28,7 +28,7 @@ services:
       - PGID=101
       - TZ=Europe/Rome
     volumes:
-      - /volume1/docker/prowlarr:/config
+      - /volume1/docker/container-config/prowlarr:/config
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -41,7 +41,7 @@ services:
       - PGID=101
       - TZ=Europe/Rome
     volumes:
-      - /volume1/docker/radarr/config:/config
+      - /volume1/docker/container-config/radarr/config:/config
       - /volume1/media/Film:/movies
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
@@ -56,7 +56,7 @@ services:
       - PGID=101
       - TZ=Europe/Rome
     volumes:
-      - /volume1/docker/sonarr/config:/config
+      - /volume1/docker/container-config/sonarr/config:/config
       - /volume1/media/Serie-TV:/tv
       - /volume1/media/Downloads:/volume1/media/Downloads
     ports:
@@ -72,10 +72,24 @@ services:
       - TZ=Europe/Rome
       - WEBUI_PORT=9090
     volumes:
-      - /volume1/docker/qbittorrent:/config
+      - /volume1/docker/container-config/qbittorrent:/config
       - /volume1/media/Downloads:/downloads
     ports:
       - 9090:9090
+    restart: unless-stopped
+
+  vscode:
+    image: lscr.io/linuxserver/code-server
+    container_name: Vscode
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+    volumes:
+      - /volume1/docker/container-config/vscode:/config
+      - /volume1/docker/composers:/config/workspace
+    ports:
+      - 8443:8443
     restart: unless-stopped
 
   shopping_list:
