@@ -1,0 +1,37 @@
+http:
+  routers:
+    synology-photo:
+      entrypoints:
+        - web
+        - websecure
+      rule: "Host(`foto.beppetemp.com`)"
+      service: synology-photo
+      middlewares: https-redirect
+      tls: true
+      tls:
+        certresolver: production
+  services:
+    synology-photo:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.239:5002"
+        serversTransport: ignore-self-signed
+  serversTransports:
+    ignore-self-signed:
+      insecureskipverify: true
+  middlewares:
+    https-redirect:
+      redirectscheme:
+        scheme: https
+        permanent: true
+
+certificatesResolvers:
+  production:
+    acme:
+      email: g.arienzo99@gmail.com
+      storage: /certificates/acme.json
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      tlschallenge: true
+      httpChallenge:
+        entryPoint: websecure
+        
