@@ -119,9 +119,9 @@ services:
       - 25565:25565
     restart: unless-stopped
 
-  Freshrss:
+  freshrss:
     image: lscr.io/linuxserver/freshrss:latest
-    container_name: freshrss
+    container_name: Freshrss
     environment:
       - PUID=1026
       - PGID=101
