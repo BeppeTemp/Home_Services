@@ -92,20 +92,46 @@ services:
       - 8443:8443
     restart: unless-stopped
 
-  shopping_list:
-    image: nanawel/our-shopping-list:latest
-    container_name: Shopping-List
+  flame:
+    image: pawelmalak/flame
+    container_name: Flame
     ports:
-      - '8000:8080'
-    depends_on:
-      - mongodb
+      - 5005:5005
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+      - PASSWORD=metin2server
+    volumes:
+      - /volume1/docker/container-config/flame:/app/data
     restart: unless-stopped
 
-  mongodb:
-    image: mongo:4
-    container_name: Mongo_DB
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: Minecraft
+    environment:
+      EULA: "TRUE"
+    tty: true
+    stdin_open: true
     volumes:
-      - dbdata:/data/db
+      - /volume1/docker/container-config/minecraft:/data
+    ports:
+      - 25565:25565
+    restart: unless-stopped
+
+  Freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    environment:
+      - PUID=1026
+      - PGID=101
+      - TZ=Europe/Rome
+    volumes:
+      - /volume1/docker/container-config/freshrss:/config
+    ports:
+      - 10110:80
+    restart: unless-stopped
 
 volumes:
-    dbdata:
+  dbdata:
+  traefik-public-certificates:
