@@ -9,6 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-public-certificates:/certificates
+      - ./rules.yml:/rules.yml:ro
     command:
       # Definizione configurazioni globali
       - --global.checkNewVersion
@@ -19,14 +20,14 @@ services:
       - --api.insecure=true
       
       # Log di Debug
-      # - --log.level=DEBUG
+      - --log.level=DEBUG
 
       # Definizione degli entrypoints
       - --entryPoints.web.address=:80
       - --entryPoints.websecure.address=:443
 
       # Definizione del risolutore di certificati
-      - --certificatesResolvers.production.acme.email=giuseppe9909@gmail.com
+      - --certificatesResolvers.production.acme.email=g.arienzo99@gmail.com
       - --certificatesResolvers.production.acme.storage=/certificates/acme.json
       - --certificatesResolvers.production.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.production.acme.tlschallenge=true
@@ -34,7 +35,9 @@ services:
 
       # Definizione dei providers
       - --providers.docker=true
-      - --providers.docker.exposedByDefault=false
+      # - --providers.file=true
+      # - --providers.file.filename=/rules.yml
+      # - --providers.file.watch=true
     labels:
       # Attivazione di Traefik
       - "traefik.enable=true"
