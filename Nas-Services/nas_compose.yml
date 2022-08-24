@@ -119,18 +119,18 @@ services:
       - 25565:25565
     restart: unless-stopped
 
-  freshrss:
-    image: lscr.io/linuxserver/freshrss:latest
-    container_name: Freshrss
-    environment:
-      - PUID=1026
-      - PGID=101
-      - TZ=Europe/Rome
-    volumes:
-      - /volume1/docker/container-config/freshrss:/config
-    ports:
-      - 10110:80
-    restart: unless-stopped
+  # freshrss:
+  #  image: lscr.io/linuxserver/freshrss:latest
+  #  container_name: Freshrss
+  #  environment:
+  #   - PUID=1026
+  #   - PGID=101
+  #   - TZ=Europe/Rome
+  # volumes:
+  #   - /volume1/docker/container-config/freshrss:/config
+  # ports:
+  #   - 10110:80
+  # restart: unless-stopped
 
   # homeassistant:
   #   image: lscr.io/linuxserver/homeassistant:latest
