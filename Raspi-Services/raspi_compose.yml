@@ -1,5 +1,5 @@
 ---
-version: "2.1"
+version: "3"
 
 services:
   homeassistant:
@@ -7,9 +7,28 @@ services:
     container_name: Home_Assistant
     network_mode: host
     environment:
-      - PUID=1026
-      - PGID=101
+      - PUID=1000
+      - PGID=100
       - TZ=Europe/Rome
     volumes:
-      - /home/pi/homeassistant:/config
+      - /home/beppetemp/config/homeassistant:/config
+    restart: unless-stopped
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: PiHole
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=100
+      - WEB_PORT=8083
+      - TZ=Europe/Rome
+    volumes:
+       - /home/beppetemp/config/pihole/config:/etc/pihole/
+       - /home/beppetemp/config/pihole/dns:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    cap_add:
+      - NET_ADMIN
     restart: unless-stopped
