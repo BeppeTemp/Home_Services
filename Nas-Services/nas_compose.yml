@@ -106,6 +106,21 @@ services:
       - /volume1/docker/container-config/flame:/app/data
     restart: unless-stopped
 
+  factorio:
+    image: factoriotools/factorio
+    container_name: Factorio
+    ports:
+      - "34197:34197/udp"
+      - "27015:27015/tcp"
+    environment:
+      - PUID=1026
+      - PGID=101
+      - UPDATE_MODS_ON_START=true
+      - USERNAME=Armu-Factorio
+    volumes:
+      - /volume1/docker/container-config/Factorio:/factorio
+    restart: unless-stopped
+
   # minecraft:
   #  image: itzg/minecraft-server
   #  container_name: Minecraft
