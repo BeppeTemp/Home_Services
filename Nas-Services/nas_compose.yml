@@ -118,7 +118,7 @@ services:
       - UPDATE_MODS_ON_START=true
       - USERNAME=Armu-Factorio
     volumes:
-      - /volume1/docker/container-config/Factorio:/factorio
+      - /volume1/docker/container-config/factorio:/factorio
     restart: unless-stopped
 
   # minecraft:
