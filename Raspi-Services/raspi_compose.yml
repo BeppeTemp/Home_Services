@@ -33,6 +33,18 @@ services:
       - NET_ADMIN
     restart: unless-stopped
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: WatchTower
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Europe/Rome
+      - WATCHTOWER_POLL_INTERVAL=300
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
   # homebridge:
   #   image: oznu/homebridge:latest
   #   container_name: Homebridge
