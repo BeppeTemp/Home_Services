@@ -54,6 +54,13 @@ services:
       - "3000:80"
     restart: unless-stopped
 
+  tirocinio-backend:
+    image: beppetemp/backend
+    container_name: Tirocinio-Backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
   # --- Container non usati:
   # homebridge:
   #   image: oznu/homebridge:latest
