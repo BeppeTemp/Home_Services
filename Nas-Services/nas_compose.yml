@@ -106,6 +106,19 @@ services:
       - /volume1/docker/container-config/flame:/app/data
     restart: unless-stopped
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: WatchTower
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Europe/Rome
+      - WATCHTOWER_POLL_INTERVAL=43200
+      - WATCHTOWER_CLEANUP=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
   # factorio:
   #   image: factoriotools/factorio
   #   container_name: Factorio
