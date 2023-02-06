@@ -24,13 +24,8 @@ services:
       - WEB_PORT=8083
       - TZ=Europe/Rome
     volumes:
-       - /home/beppetemp/config/pihole/config:/etc/pihole/
-       - /home/beppetemp/config/pihole/dns:/etc/dnsmasq.d/
-    dns:
-      - 127.0.0.1
-      - 8.8.8.8
-    cap_add:
-      - NET_ADMIN
+       - /home/beppetemp/config/pihole/config:/etc/pihole
+       - /home/beppetemp/config/pihole/dns:/etc/dnsmasq.d
     restart: unless-stopped
 
   watchtower:
