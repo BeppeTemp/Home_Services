@@ -79,20 +79,6 @@ services:
       - 9090:9090
     restart: unless-stopped
 
-  vscode:
-    image: lscr.io/linuxserver/code-server
-    container_name: Vscode
-    environment:
-      - PUID=1026
-      - PGID=101
-      - TZ=Europe/Rome
-    volumes:
-      - /volume1/docker/container-config/vscode:/config
-      - /volume1/docker/composers:/config/workspace
-    ports:
-      - 8443:8443
-    restart: unless-stopped
-
   flame:
     image: pawelmalak/flame
     container_name: Flame
@@ -119,6 +105,20 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
+
+  # vscode:
+  #   image: lscr.io/linuxserver/code-server
+  #   container_name: Vscode
+  #   environment:
+  #     - PUID=1026
+  #     - PGID=101
+  #     - TZ=Europe/Rome
+  #   volumes:
+  #     - /volume1/docker/container-config/vscode:/config
+  #     - /volume1/docker/composers:/config/workspace
+  #   ports:
+  #     - 8443:8443
+  #   restart: unless-stopped
 
   # factorio:
   #   image: factoriotools/factorio
