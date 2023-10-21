@@ -63,7 +63,7 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
-  
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent
     container_name: Qbittorrent
@@ -104,7 +104,10 @@ services:
       - WATCHTOWER_CLEANUP=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
+    restart:
+      unless-stopped
+
+  # --- Container non usati:
 
   # matter-server:
   #   image: ghcr.io/home-assistant-libs/python-matter-server:stable
@@ -183,7 +186,3 @@ services:
   #   volumes:
   #     - /volume1/docker/container-config/homeassistant:/config
   #   restart: unless-stopped
-
-volumes:
-  dbdata:
-  traefik-public-certificates:
