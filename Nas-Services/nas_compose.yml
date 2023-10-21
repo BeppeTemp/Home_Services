@@ -106,6 +106,17 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
+  # matter-server:
+  #   image: ghcr.io/home-assistant-libs/python-matter-server:stable
+  #   container_name: Matter_Server
+  #   restart: unless-stopped
+  #   network_mode: host
+  #   security_opt:
+  #     - apparmor:unconfined
+  #   volumes:
+  #     - /volume1/docker/container-config/matter-server/data:/data/
+  #     - /run/dbus:/run/dbus:ro
+
   # vscode:
   #   image: lscr.io/linuxserver/code-server
   #   container_name: Vscode
