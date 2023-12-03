@@ -41,21 +41,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
-  # --- Container non usati:
+  homebridge:
+    image: oznu/homebridge:latest
+    container_name: Homebridge
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Europe/Rome
+    volumes:
+      - /home/beppetemp/config/homebridge:/homebridge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
+    restart: always
 
-  # homebridge:
-  #   image: oznu/homebridge:latest
-  #   container_name: Homebridge
-  #   network_mode: host
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=100
-  #     - TZ=Europe/Rome
-  #   volumes:
-  #     - /home/beppetemp/config/homebridge:/homebridge
-  #   logging:
-  #     driver: json-file
-  #     options:
-  #       max-size: "10mb"
-  #       max-file: "1"
-  #   restart: always
+  # --- Container non usati:
