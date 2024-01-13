@@ -107,6 +107,23 @@ services:
     restart:
       unless-stopped
 
+  gitlab:
+    image: "gitlab/gitlab-ce:latest"
+    container_name: GitLab
+    hostname: 'gitlab.beppetemp.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.beppetemp.com'
+    ports:
+      - '8443:443'
+      - '22:22'
+    volumes:
+      - "/volume1/docker/container-config/gitlab/config:/etc/gitlab"
+      - "/volume1/docker/container-config/gitlab/logs:/var/log/gitlab"
+      - "/volume1/docker/container-config/gitlab/data:/var/opt/gitlab"
+    shm_size: "256m"
+    restart: unless-stopped
+
   # --- Container non usati:
 
   # matter-server:
